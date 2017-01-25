@@ -15,6 +15,7 @@
 		2235F9CF1E264FA30054A364 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2235F9CD1E264FA30054A364 /* Main.storyboard */; };
 		224770F71E2CE9700024B2E7 /* Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224770F61E2CE9700024B2E7 /* Keyboard.swift */; };
 		224770F91E2E51E90024B2E7 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 224770F81E2E51E90024B2E7 /* GameScene.sks */; };
+		224770FB1E30C8E30024B2E7 /* field.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 224770FA1E30C8E30024B2E7 /* field.fsh */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		2235F9D01E264FA30054A364 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		224770F61E2CE9700024B2E7 /* Keyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keyboard.swift; sourceTree = "<group>"; };
 		224770F81E2E51E90024B2E7 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
+		224770FA1E30C8E30024B2E7 /* field.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = field.fsh; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +71,7 @@
 				2235F9CD1E264FA30054A364 /* Main.storyboard */,
 				2235F9D01E264FA30054A364 /* Info.plist */,
 				224770F61E2CE9700024B2E7 /* Keyboard.swift */,
+				224770FA1E30C8E30024B2E7 /* field.fsh */,
 			);
 			path = SKTest2;
 			sourceTree = "<group>";
@@ -137,6 +140,7 @@
 				2235F9CC1E264FA30054A364 /* Assets.xcassets in Resources */,
 				2235F9C61E264FA30054A364 /* Actions.sks in Resources */,
 				2235F9CF1E264FA30054A364 /* Main.storyboard in Resources */,
+				224770FB1E30C8E30024B2E7 /* field.fsh in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

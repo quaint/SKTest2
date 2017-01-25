@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SKTest2/GameScene.swift"
-            timestampString = "506260483.145105"
+            timestampString = "506527063.30209"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "24"
-            endingLineNumber = "24"
+            startingLineNumber = "29"
+            endingLineNumber = "29"
             landmarkName = "GameScene"
             landmarkType = "3">
             <Locations>
@@ -133,59 +133,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SKTest2/GameScene.swift"
-            timestampString = "506443081.512791"
+            timestampString = "506951459.279535"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "152"
-            endingLineNumber = "152"
-            landmarkName = "addPointOnMask(x:y:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "SKTest2.GameScene.addPointOnMask (x : CoreGraphics.CGFloat, y : CoreGraphics.CGFloat) -&gt; ()"
-                  moduleName = "SKTest2"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/tomaszwisniewski/Desktop/SKTest2/SKTest2/GameScene.swift"
-                  timestampString = "506441949.250208"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "154"
-                  endingLineNumber = "154"
-                  offsetFromSymbolStart = "32">
-               </Location>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "SKTest2.GameScene.addPointOnMask (x : CoreGraphics.CGFloat, y : CoreGraphics.CGFloat) -&gt; ()"
-                  moduleName = "SKTest2"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/tomaszwisniewski/Desktop/SKTest2/SKTest2/GameScene.swift"
-                  timestampString = "506441949.25336"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "154"
-                  endingLineNumber = "154"
-                  offsetFromSymbolStart = "511">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SKTest2/GameScene.swift"
-            timestampString = "506443081.512791"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "96"
-            endingLineNumber = "96"
+            startingLineNumber = "110"
+            endingLineNumber = "110"
             landmarkName = "didMove(to:)"
             landmarkType = "7">
          </BreakpointContent>
