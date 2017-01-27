@@ -24,6 +24,7 @@ enum RotateDirection: Int {
 enum ActiveMachine: Int {
     case combine
     case tractor
+    case tractorTwo
 }
 
 class GameScene: SKScene {
@@ -34,6 +35,7 @@ class GameScene: SKScene {
     
     var combine: SKSpriteNode!
     var tractor: SKSpriteNode!
+    var tractorTwo: SKSpriteNode!
     var trailerOne: SKSpriteNode!
     var trailerTwo: SKSpriteNode!
     
@@ -60,10 +62,17 @@ class GameScene: SKScene {
 
     let bufferWidth = 60
     let bufferHeight = 60
+    
     let maskWidth = 4
     let maskHeight = 36
     let maskAnchorX = 11
     let maskAnchorY = -18
+    
+    let maskTwoWidth = 4
+    let maskTwoHeight = 18
+    let maskTwoAnchorX = -20
+    let maskTwoAnchorY = -9
+    
     let maskDivider = 2
     
     let fieldBlocksWidth = 50
@@ -117,6 +126,12 @@ class GameScene: SKScene {
         fieldNode.shader?.addUniform(fieldGroundTextureUniform)
         fieldNode.shader?.addUniform(fieldMaskTextureUniform)
         
+        mask = SKSpriteNode(texture: maskTexture)
+//        mask?.position = CGPoint(x: -10, y: -10)
+        mask?.zPosition = 3
+        mask?.color = SKColor.black
+        self.addChild(mask!)
+        
         combine = SKSpriteNode(imageNamed:"combine")
         combine.zPosition = 2
         combine.anchorPoint = CGPoint(x: 0.5, y: 0.5)
@@ -133,6 +148,16 @@ class GameScene: SKScene {
         tractor.physicsBody?.mass = 50.0
         tractor.position = CGPoint(x: 120, y: 120)
         self.addChild(tractor)
+        
+        tractorTwo = SKSpriteNode(imageNamed:"tractor")
+        tractorTwo.zPosition = 2
+        tractorTwo.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        tractorTwo.physicsBody = SKPhysicsBody(rectangleOf: tractor.size)
+        tractorTwo.physicsBody?.angularDamping = 1.0
+        tractorTwo.physicsBody?.linearDamping = 1.0
+        tractorTwo.physicsBody?.mass = 50.0
+        tractorTwo.position = CGPoint(x: 220, y: 120)
+        self.addChild(tractorTwo)
         
         trailerOne = SKSpriteNode(imageNamed:"trailer")
         trailerOne.zPosition = 2
@@ -200,6 +225,16 @@ class GameScene: SKScene {
                 tractor.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
             }
             cam.position = tractor.position
+        case .tractorTwo:
+            tractorTwo.zRotation = tractorTwo.zRotation + CGFloat(rotate)
+            tractorTwo.position = CGPoint(x: tractorTwo.position.x + cos(tractorTwo.zRotation) * move,
+                                       y: tractorTwo.position.y + sin(tractorTwo.zRotation) * move)
+            cam.position = tractorTwo.position
+            if (moveDirection != .none || rotateDirection != .none) {
+                updateMask()
+                addPointOnMask(x: tractorTwo.position.x/CGFloat(maskDivider) + CGFloat(fieldBlocksWidth * gridSize)/CGFloat(2*maskDivider) - CGFloat(bufferWidth/2),
+                               y: tractorTwo.position.y/CGFloat(maskDivider) + CGFloat(fieldBlocksHeight * gridSize)/CGFloat(2*maskDivider) - CGFloat(bufferHeight/2))
+            }
         }
     }
 
@@ -207,15 +242,21 @@ class GameScene: SKScene {
         let colorSpace:CGColorSpace = CGColorSpaceCreateDeviceRGB()
         let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
         let context = CGContext(data: nil, width: bufferWidth, height: bufferHeight, bitsPerComponent: 8, bytesPerRow: bufferWidth * 4, space: colorSpace, bitmapInfo: bitmapInfo.rawValue)
+        context?.translateBy(x: CGFloat(bufferWidth/2), y: CGFloat(bufferHeight/2))
         switch activeMachine {
         case .combine:
             context?.setFillColor(CGColor(red: 1, green: 0, blue: 0, alpha: 1))
+            context?.rotate(by: -combine.zRotation)
+            context?.fill(CGRect(x: maskAnchorX, y: maskAnchorY, width: maskWidth, height: maskHeight))
         case .tractor:
             context?.setFillColor(CGColor(red: 0, green: 1, blue: 0, alpha: 1))
+            context?.rotate(by: -tractor.zRotation)
+            context?.fill(CGRect(x: maskAnchorX, y: maskAnchorY, width: maskWidth, height: maskHeight))
+        case .tractorTwo:
+            context?.setFillColor(CGColor(red: 0, green: 0, blue: 1, alpha: 1))
+            context?.rotate(by: -tractorTwo.zRotation)
+            context?.fill(CGRect(x: maskTwoAnchorX, y: maskTwoAnchorY, width: maskTwoWidth, height: maskTwoHeight))
         }
-        context?.translateBy(x: CGFloat(bufferWidth/2), y: CGFloat(bufferHeight/2))
-        context?.rotate(by: -combine.zRotation)
-        context?.fill(CGRect(x: maskAnchorX, y: maskAnchorY, width: maskWidth, height: maskHeight))
         let image = context?.makeImage()
         let data = image?.dataProvider?.data
         let ptr = CFDataGetBytePtr(data)
@@ -233,11 +274,28 @@ class GameScene: SKScene {
                     for insideY in 0..<self.bufferHeight {
                         let startIndex = (insideY * self.bufferWidth + insideX) * 4
                         let newArr: [UInt8] = [arr[startIndex + 0], arr[startIndex + 1], arr[startIndex + 2], arr[startIndex + 3]]
-                        let pixel = UnsafePointer(newArr).withMemoryRebound(to: UInt32.self, capacity: 1) {
-                            $0.pointee
+                        var pixel: UInt32 = 0
+                        if (newArr[3] == 0xFF) {
+                            if (newArr[2] == 0xFF) {
+                                pixel = 0xFFFF0000
+                            } else if (newArr[0] == 0xFF) {
+                                pixel = 0xFF0000FF
+                            }
                         }
+//                        let pixel = UnsafePointer(newArr).withMemoryRebound(to: UInt32.self, capacity: 1) {
+//                            $0.pointee
+//                        }
                         if (pixel != 0x00000000) {
-                            pixelData?.storeBytes(of: pixel, toByteOffset: pos * 4 + insideX * 4 + insideY * 4 * Int(self.maskTexture.size().width), as: UInt32.self)
+                            let byteOffset = pos * 4 + insideX * 4 + insideY * 4 * Int(self.maskTexture.size().width)
+                            let originalValue = pixelData?.load(fromByteOffset: byteOffset, as: UInt32.self)
+//                            print("\(String(format: "%X", originalValue!))")
+//                            print("\(String(format: "%X", pixel))")
+//                            print("-----------")
+                            if (originalValue! == 0xFF0000FF && pixel == 0xFFFF0000) {
+                                pixelData?.storeBytes(of: pixel, toByteOffset: byteOffset, as: UInt32.self)
+                            } else if (originalValue! == 0 && (pixel == 0xFFFF0000 || pixel == 0xFF0000FF)) {
+                                pixelData?.storeBytes(of: pixel, toByteOffset: byteOffset, as: UInt32.self)
+                            }
                         }
                     }
                 }
@@ -246,9 +304,12 @@ class GameScene: SKScene {
     }
     
     func switchMachine() {
-        if (activeMachine == .combine) {
+        switch activeMachine {
+        case .combine:
             activeMachine = .tractor
-        } else {
+        case .tractor:
+            activeMachine = .tractorTwo
+        case .tractorTwo:
             activeMachine = .combine
         }
     }

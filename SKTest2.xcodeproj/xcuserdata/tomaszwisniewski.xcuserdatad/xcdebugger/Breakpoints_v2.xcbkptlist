@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SKTest2/GameScene.swift"
-            timestampString = "506527063.30209"
+            timestampString = "507033681.68513"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "29"
-            endingLineNumber = "29"
+            startingLineNumber = "30"
+            endingLineNumber = "30"
             landmarkName = "GameScene"
             landmarkType = "3">
             <Locations>
@@ -133,11 +133,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SKTest2/GameScene.swift"
-            timestampString = "506951459.279535"
+            timestampString = "507036471.518709"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "110"
-            endingLineNumber = "110"
+            startingLineNumber = "119"
+            endingLineNumber = "119"
             landmarkName = "didMove(to:)"
             landmarkType = "7">
          </BreakpointContent>
