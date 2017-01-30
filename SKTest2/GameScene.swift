@@ -7,7 +7,6 @@
 //
 
 import SpriteKit
-import GameplayKit
 
 enum MoveDirection: Int {
     case forward = 1
@@ -38,6 +37,7 @@ class GameScene: SKScene {
     var tractorTwo: SKSpriteNode!
     var trailerOne: SKSpriteNode!
     var trailerTwo: SKSpriteNode!
+    var anim: SKSpriteNode!
     
     var rotateDirection = RotateDirection.none
     var moveDirection = MoveDirection.none
@@ -106,7 +106,7 @@ class GameScene: SKScene {
         
         let fieldTexture = self.view?.texture(from: field)
         fieldNode = SKSpriteNode(texture: fieldTexture)
-        fieldNode.zPosition = 0
+        fieldNode.zPosition = -1
         self.addChild(fieldNode)
         
         fieldDoneTexture = self.view?.texture(from: fieldDone)
@@ -130,7 +130,7 @@ class GameScene: SKScene {
 //        mask?.position = CGPoint(x: -10, y: -10)
         mask?.zPosition = 3
         mask?.color = SKColor.black
-        self.addChild(mask!)
+//        self.addChild(mask!)
         
         combine = SKSpriteNode(imageNamed:"combine")
         combine.zPosition = 2
@@ -166,16 +166,16 @@ class GameScene: SKScene {
         trailerOne.physicsBody?.angularDamping = 1.0
         trailerOne.physicsBody?.linearDamping = 1.0
         trailerOne.physicsBody?.mass = 150.0
-        trailerOne.position = CGPoint(x: tractor.position.x-tractor.size.width/2-trailerOne.size.width/2, y: tractor.position.y)
-        self.addChild(trailerOne)
+        trailerOne.position = CGPoint(x: -tractor.size.width, y: 0)
+        tractor.addChild(trailerOne)
         
-        let pinJoint = SKPhysicsJointPin.joint(withBodyA: tractor.physicsBody!,
-                                               bodyB: trailerOne.physicsBody!,
-                                               anchor: CGPoint(x: tractor.position.x - tractor.size.width/2, y: tractor.position.y))
-        pinJoint.shouldEnableLimits = true
-        pinJoint.upperAngleLimit = CGFloat.pi/4
-        pinJoint.lowerAngleLimit = -CGFloat.pi/4
-        self.physicsWorld.add(pinJoint)
+//        let pinJoint = SKPhysicsJointPin.joint(withBodyA: tractor.physicsBody!,
+//                                               bodyB: trailerOne.physicsBody!,
+//                                               anchor: CGPoint(x: tractor.position.x - tractor.size.width/2, y: tractor.position.y))
+//        pinJoint.shouldEnableLimits = true
+//        pinJoint.upperAngleLimit = CGFloat.pi/4
+//        pinJoint.lowerAngleLimit = -CGFloat.pi/4
+//        self.physicsWorld.add(pinJoint)
         
         trailerTwo = SKSpriteNode(imageNamed:"trailer")
         trailerTwo.zPosition = 2
@@ -187,13 +187,21 @@ class GameScene: SKScene {
         trailerTwo.position = CGPoint(x: trailerOne.position.x-trailerOne.size.width/2-trailerTwo.size.width/2, y: trailerOne.position.y)
         self.addChild(trailerTwo)
         
-        let pinJointTwo = SKPhysicsJointPin.joint(withBodyA: trailerOne.physicsBody!,
-                                               bodyB: trailerTwo.physicsBody!,
-                                               anchor: CGPoint(x: trailerOne.position.x - trailerOne.size.width/2, y: trailerOne.position.y))
-        pinJointTwo.shouldEnableLimits = true
-        pinJointTwo.upperAngleLimit = CGFloat.pi/4
-        pinJointTwo.lowerAngleLimit = -CGFloat.pi/4
+//        let pinJointTwo = SKPhysicsJointPin.joint(withBodyA: trailerOne.physicsBody!,
+//                                               bodyB: trailerTwo.physicsBody!,
+//                                               anchor: CGPoint(x: trailerOne.position.x - trailerOne.size.width/2, y: trailerOne.position.y))
+//        pinJointTwo.shouldEnableLimits = true
+//        pinJointTwo.upperAngleLimit = CGFloat.pi/4
+//        pinJointTwo.lowerAngleLimit = -CGFloat.pi/4
 //        self.physicsWorld.add(pinJointTwo)
+        
+        anim = SKSpriteNode(imageNamed: "anim1")
+        anim.position = CGPoint(x: -40, y: 0)
+        let textures = [SKTexture(imageNamed: "anim1"), SKTexture(imageNamed: "anim2")]
+        let animate = SKAction.animate(with: textures, timePerFrame: 0.2)
+        let repeatAnimation = SKAction.repeatForever(animate)
+        anim.run(repeatAnimation)
+        combine.addChild(anim)
     }
     
     override func update(_ currentTime: TimeInterval) {
@@ -214,16 +222,20 @@ class GameScene: SKScene {
                                y: combine.position.y/CGFloat(maskDivider) + CGFloat(fieldBlocksHeight * gridSize)/CGFloat(2*maskDivider) - CGFloat(bufferHeight/2))
             }
         case .tractor:
-            let rotation = tractor.zRotation + CGFloat(rotate)
+            tractor.zRotation = tractor.zRotation + CGFloat(rotate)
+            tractor.position = CGPoint(x: tractor.position.x + cos(tractor.zRotation) * move,
+                                          y: tractor.position.y + sin(tractor.zRotation) * move)
+            cam.position = tractor.position
+//            let rotation = tractor.zRotation + CGFloat(rotate)
 //            tractor.position = CGPoint(x: tractor.position.x + cos(tractor.zRotation) * move,
 //                                       y: tractor.position.y + sin(tractor.zRotation) * move)
-            if (moveDirection == .forward) {
-                tractor.physicsBody?.velocity = CGVector(dx: cos(rotation) * 40, dy: sin(rotation) * 40)
-                let angle = atan2(tractor.physicsBody!.velocity.dy, tractor.physicsBody!.velocity.dx)
-                tractor.zRotation = angle
-            } else if (moveDirection == .backward) {
-                tractor.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-            }
+//            if (moveDirection == .forward) {
+//                tractor.physicsBody?.velocity = CGVector(dx: cos(rotation) * 40, dy: sin(rotation) * 40)
+//                let angle = atan2(tractor.physicsBody!.velocity.dy, tractor.physicsBody!.velocity.dx)
+//                tractor.zRotation = angle
+//            } else if (moveDirection == .backward) {
+//                tractor.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+//            }
             cam.position = tractor.position
         case .tractorTwo:
             tractorTwo.zRotation = tractorTwo.zRotation + CGFloat(rotate)
