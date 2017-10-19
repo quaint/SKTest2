@@ -20,7 +20,7 @@ enum RotateDirection: Int {
     case none = 0
 }
 
-enum ActiveMachine: Int {
+enum ActiveMachine {
     case combine
     case tractor
     case tractorTwo
@@ -40,13 +40,12 @@ class GameScene: SKScene {
     var trailerOne: SKSpriteNode!
     var trailerTwo: SKSpriteNode!
     
-    
     var rotateDirection = RotateDirection.none
     var moveDirection = MoveDirection.none
     var activeMachine = ActiveMachine.combine
-    var previousTime: Double = 0
-    let rotateSpeed: Double = 1
-    let moveSpeed: Double = 40
+    var previousTime = 0.0
+    let rotateSpeed = 1.0
+    let moveSpeed = 40.0
     
     let field = SKNode()
     let fieldDone = SKNode()
@@ -156,9 +155,10 @@ class GameScene: SKScene {
         tractorTwo.zPosition = 2
         tractorTwo.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         tractorTwo.physicsBody = SKPhysicsBody(rectangleOf: tractorOne.size)
-        tractorTwo.physicsBody?.angularDamping = 1.0
-        tractorTwo.physicsBody?.linearDamping = 1.0
-        tractorTwo.physicsBody?.mass = 50.0
+        tractorTwo.physicsBody?.angularDamping = 5.0
+        tractorTwo.physicsBody?.linearDamping = 5.0
+//        tractorTwo.physicsBody?.mass = 1.0
+//        tractorTwo.physicsBody?.friction = 100.0
         tractorTwo.position = CGPoint(x: 220, y: 120)
         self.addChild(tractorTwo)
         
@@ -166,13 +166,13 @@ class GameScene: SKScene {
         trailerOne.zPosition = 2
         trailerOne.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         trailerOne.physicsBody = SKPhysicsBody(rectangleOf: trailerOne.size)
-        trailerOne.physicsBody?.angularDamping = 0.3
-        trailerOne.physicsBody?.linearDamping = 0.15
-        trailerOne.physicsBody?.friction = 0.3
-        trailerOne.physicsBody?.restitution = 0.4
-        trailerOne.physicsBody?.density = 1.0
-        trailerOne.position = CGPoint(x: -tractorOne.size.width - 10, y: 0)
-        tractorOne.addChild(trailerOne)
+        trailerOne.physicsBody?.angularDamping = 25.0
+        trailerOne.physicsBody?.linearDamping = 5.0
+//        trailerOne.physicsBody?.friction = 100.0
+//        trailerOne.physicsBody?.restitution = 10.0
+//        trailerOne.physicsBody?.mass = 1.0
+        trailerOne.position = CGPoint(x: 76, y: 120)
+        self.addChild(trailerOne)
         
         let pinJoint = SKPhysicsJointPin.joint(withBodyA: tractorOne.physicsBody!,
                                                bodyB: trailerOne.physicsBody!,
@@ -190,7 +190,7 @@ class GameScene: SKScene {
         trailerTwo.physicsBody?.angularDamping = 1.0
         trailerTwo.physicsBody?.linearDamping = 1.0
         trailerTwo.physicsBody?.mass = 150.0
-        trailerTwo.position = CGPoint(x: trailerOne.position.x-trailerOne.size.width/2-trailerTwo.size.width/2, y: trailerOne.position.y)
+//        trailerTwo.position = CGPoint(x: trailerOne.position.x-trailerOne.size.width/2-trailerTwo.size.width/2, y: trailerOne.position.y)
         self.addChild(trailerTwo)
         
 //        let pinJointTwo = SKPhysicsJointPin.joint(withBodyA: trailerOne.physicsBody!,
@@ -232,8 +232,8 @@ class GameScene: SKScene {
 //            tractorOne.position = CGPoint(x: tractorOne.position.x + cos(tractorOne.zRotation) * move,
 //                                          y: tractorOne.position.y + sin(tractorOne.zRotation) * move)
             let rotation = tractorOne.zRotation + CGFloat(Double(rotateDirection.rawValue) * 0.05)
-            tractorOne.position = CGPoint(x: tractorOne.position.x + cos(tractorOne.zRotation) * move,
-                                       y: tractorOne.position.y + sin(tractorOne.zRotation) * move)
+//            tractorOne.position = CGPoint(x: tractorOne.position.x + cos(tractorOne.zRotation) * move,
+//                                       y: tractorOne.position.y + sin(tractorOne.zRotation) * move)
             if (moveDirection == .forward) {
                 tractorOne.physicsBody?.velocity = CGVector(dx: cos(rotation) * CGFloat(moveSpeed),
                                                             dy: sin(rotation) * CGFloat(moveSpeed))
