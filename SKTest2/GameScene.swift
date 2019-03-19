@@ -85,7 +85,7 @@ class GameScene: SKScene {
         self.physicsWorld.gravity = CGVector(dx: 0, dy: 0)
         self.physicsBody = SKPhysicsBody(edgeLoopFrom: self.frame)
         
-        cam = childNode(withName: "camera") as! SKCameraNode!
+        cam = childNode(withName: "camera") as! SKCameraNode?
         
         for x in 0..<fieldBlocksWidth {
             for y in 0..<fieldBlocksHeight {

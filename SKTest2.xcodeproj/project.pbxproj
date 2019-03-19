@@ -17,6 +17,8 @@
 		224770F71E2CE9700024B2E7 /* Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224770F61E2CE9700024B2E7 /* Keyboard.swift */; };
 		224770F91E2E51E90024B2E7 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 224770F81E2E51E90024B2E7 /* GameScene.sks */; };
 		224770FB1E30C8E30024B2E7 /* field.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 224770FA1E30C8E30024B2E7 /* field.fsh */; };
+		226DB6A9224103D0002A3532 /* Mask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 226DB6A8224103D0002A3532 /* Mask.swift */; };
+		226DB6AB224132CB002A3532 /* Machine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 226DB6AA224132CB002A3532 /* Machine.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +34,8 @@
 		224770F61E2CE9700024B2E7 /* Keyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keyboard.swift; sourceTree = "<group>"; };
 		224770F81E2E51E90024B2E7 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
 		224770FA1E30C8E30024B2E7 /* field.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = field.fsh; sourceTree = "<group>"; };
+		226DB6A8224103D0002A3532 /* Mask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mask.swift; sourceTree = "<group>"; };
+		226DB6AA224132CB002A3532 /* Machine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Machine.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +72,7 @@
 				2235F9C51E264FA30054A364 /* Actions.sks */,
 				224770F81E2E51E90024B2E7 /* GameScene.sks */,
 				2235F9C71E264FA30054A364 /* GameScene.swift */,
+				226DB6A8224103D0002A3532 /* Mask.swift */,
 				2235F9C91E264FA30054A364 /* ViewController.swift */,
 				2235F9CB1E264FA30054A364 /* Assets.xcassets */,
 				2235F9CD1E264FA30054A364 /* Main.storyboard */,
@@ -75,6 +80,7 @@
 				224770F61E2CE9700024B2E7 /* Keyboard.swift */,
 				224770FA1E30C8E30024B2E7 /* field.fsh */,
 				223CA1DF1E5F8317005C1812 /* Combine.swift */,
+				226DB6AA224132CB002A3532 /* Machine.swift */,
 			);
 			path = SKTest2;
 			sourceTree = "<group>";
@@ -105,8 +111,9 @@
 		2235F9B61E264FA30054A364 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0820;
-				LastUpgradeCheck = 0900;
+				DefaultBuildSystemTypeForWorkspace = Latest;
+				LastSwiftUpdateCheck = 1010;
+				LastUpgradeCheck = 1000;
 				ORGANIZATIONNAME = GlobalLogic;
 				TargetAttributes = {
 					2235F9BD1E264FA30054A364 = {
@@ -157,9 +164,11 @@
 			files = (
 				2235F9CA1E264FA30054A364 /* ViewController.swift in Sources */,
 				2235F9C81E264FA30054A364 /* GameScene.swift in Sources */,
+				226DB6AB224132CB002A3532 /* Machine.swift in Sources */,
 				224770F71E2CE9700024B2E7 /* Keyboard.swift in Sources */,
 				223CA1E01E5F8317005C1812 /* Combine.swift in Sources */,
 				2235F9C21E264FA30054A364 /* AppDelegate.swift in Sources */,
+				226DB6A9224103D0002A3532 /* Mask.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -190,6 +199,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -197,6 +207,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -245,6 +256,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -252,6 +264,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
