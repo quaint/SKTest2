@@ -78,6 +78,8 @@ class GameScene: SKScene {
     let fieldBlocksWidth = 50
     let fieldBlocksHeight = 40
     
+    var maskObject: Mask?
+    
     var cam: SKCameraNode!
     
     override func didMove(to view: SKView) {
@@ -116,6 +118,7 @@ class GameScene: SKScene {
 
         maskTexture = SKMutableTexture(size: CGSize(width: CGFloat(fieldBufferSizeWidth/maskDivider),
                                                       height: CGFloat(fieldBufferSizeHeight/maskDivider)))
+        maskObject = Mask(texture: maskTexture)
         
         fieldNode.shader = SKShader(fileNamed: "field.fsh")
         let fieldDoneTextureUniform = SKUniform(name: "field_done", texture: fieldDoneTexture)
