@@ -16,11 +16,20 @@ class Mask {
     let center = CGPoint(x: 30.0, y: 30.0)
     let colorSpace:CGColorSpace = CGColorSpaceCreateDeviceRGB()
     let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
+    let colorRed = CGColor(red: 1.0, green: 0.0, blue: 0.0, alpha: 1.0)
+    let colorBlue = CGColor(red: 0.0, green: 0.0, blue: 1.0, alpha: 1.0)
+    let combineMaskRect = CGRect(x: 11, y: -18, width: 4, height: 36)
+    let tractorMaskRect = CGRect(x: -20, y: -9, width: 4, height: 18)
     
     let maskTexture: SKMutableTexture
+    let spriteNode: SKSpriteNode
     
-    init(texture: SKMutableTexture) {
-        self.maskTexture = texture
+    init(size: CGSize) {
+        self.maskTexture = SKMutableTexture(size: size)
+        self.spriteNode = SKSpriteNode(texture: maskTexture)
+        self.spriteNode.zPosition = 3
+        self.spriteNode.color = SKColor.black
+
     }
     
     func generateBrushImage(rotation: CGFloat, color: CGColor, mask: CGRect) -> [UInt8] {
@@ -43,16 +52,17 @@ class Mask {
         return arrayOfBytesWithMask
     }
     
-    func addPointOnMask(point: CGPoint, arrayOfBytesWithMask: [UInt8]) {
+    func drawBrushAtPoint(point: CGPoint, arrayOfBytesWithMask: [UInt8]) {
         maskTexture.modifyPixelData({pixelData, lengthInBytes in
-            let indexInArray = Int(point.y) * Int(self.maskTexture.size().width) + Int(point.x)
-            for insideX in 0..<self.brushImageWidth {
-                for insideY in 0..<self.brushImageHeight {
-                    let insideIndex = (insideY * self.brushImageWidth + insideX) * 4
-                    let pixelArray: [UInt8] = [arrayOfBytesWithMask[insideIndex + 0],
-                                           arrayOfBytesWithMask[insideIndex + 1],
-                                           arrayOfBytesWithMask[insideIndex + 2],
-                                           arrayOfBytesWithMask[insideIndex + 3]]
+            let maskTextureWidth = Int(self.maskTexture.size().width)
+            let indexInTextureArray = Int(point.y) * maskTextureWidth + Int(point.x)
+            for brushX in 0..<self.brushImageWidth {
+                for brushY in 0..<self.brushImageHeight {
+                    let brushArrayIndex = (brushY * self.brushImageWidth + brushX) * 4
+                    let pixelArray: [UInt8] = [arrayOfBytesWithMask[brushArrayIndex + 0],
+                                           arrayOfBytesWithMask[brushArrayIndex + 1],
+                                           arrayOfBytesWithMask[brushArrayIndex + 2],
+                                           arrayOfBytesWithMask[brushArrayIndex + 3]]
                     var pixel: UInt32 = 0
                     if (pixelArray[3] == 0xFF) {
                         if (pixelArray[2] == 0xFF) {
@@ -62,7 +72,7 @@ class Mask {
                         }
                     }
                     if (pixel != 0x00000000) {
-                        let byteOffset = indexInArray * 4 + insideX * 4 + insideY * 4 * Int(self.maskTexture.size().width)
+                        let byteOffset = indexInTextureArray * 4 + brushX * 4 + brushY * 4 * maskTextureWidth
                         let originalValue = pixelData?.load(fromByteOffset: byteOffset, as: UInt32.self)
                         if (originalValue! == 0xFF0000FF && pixel == 0xFFFF0000) {
                             pixelData?.storeBytes(of: pixel, toByteOffset: byteOffset, as: UInt32.self)

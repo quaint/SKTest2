@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Combine {
+class CombineNext {
     
 //    let engine = Engine()
     
