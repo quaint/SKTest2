@@ -61,7 +61,7 @@ class GameScene: SKScene {
             combine.update(delta: delta, moveDirection: moveDirection, rotateDirection: rotateDirection)
             cam.position = combine.spriteNode.position
             if (moveDirection != .none || rotateDirection != .none) {
-                field.update(spriteNode: combine.spriteNode)
+                field.update(spriteNode: combine.spriteNode, moveDirection: moveDirection)
             }
         default:
             print("unknown machine type")

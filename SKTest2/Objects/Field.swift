@@ -68,7 +68,7 @@ class Field {
         self.spriteNode.zPosition = -1
     }
     
-    func update(spriteNode: SKSpriteNode) {
-        mask.update(spriteNode: spriteNode)
+    func update(spriteNode: SKSpriteNode, moveDirection: MoveDirection) {
+        mask.update(spriteNode: spriteNode, moveDirection: moveDirection)
     }
 }

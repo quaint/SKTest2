@@ -105,13 +105,15 @@ class Mask {
                        y: position.y / divider + shiftFromPositionVertical)
     }
     
-    func update(spriteNode: SKSpriteNode) {
-        let headerBrushImage = generateBrushImage(rotation: spriteNode.zRotation, color: colorRed,
+    func update(spriteNode: SKSpriteNode, moveDirection: MoveDirection) {
+        if moveDirection == .forward {
+            let headerBrushImage = generateBrushImage(rotation: spriteNode.zRotation, color: colorRed,
                                             brush: headerBrush)
+            drawOnTexture(point: nodePointToTexturePoint(position: spriteNode.position),
+                          brush: headerBrushImage)
+        }
         let strawBrushImage = generateBrushImage(rotation: spriteNode.zRotation, color: colorBlue,
                                             brush: strawBrush)
-        drawOnTexture(point: nodePointToTexturePoint(position: spriteNode.position),
-                      brush: headerBrushImage)
         drawOnTexture(point: nodePointToTexturePoint(position: spriteNode.position),
                       brush: strawBrushImage)
     }
