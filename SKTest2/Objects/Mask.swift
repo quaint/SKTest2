@@ -13,10 +13,7 @@ class Mask {
 
     let brushImageWidth = 60
     let brushImageHeight = 60
-    var brushImageCenter: CGPoint {
-        return CGPoint(x: CGFloat(self.brushImageWidth) / 2,
-                       y: CGFloat(self.brushImageHeight) / 2)
-    }
+    let brushImageCenter: CGPoint
     
     let divider: CGFloat = 2.0
 
@@ -25,8 +22,8 @@ class Mask {
     
     let colorRed = CGColor(red: 1.0, green: 0.0, blue: 0.0, alpha: 1.0)
     let colorBlue = CGColor(red: 0.0, green: 0.0, blue: 1.0, alpha: 1.0)
-    let combineBrush = CGRect(x: 11, y: -20, width: 4, height: 38)
-    let tractorBrush = CGRect(x: -20, y: -9, width: 4, height: 18)
+    let headerBrush = CGRect(x: 11, y: -20, width: 4, height: 38)
+    let strawBrush = CGRect(x: -20, y: -9, width: 4, height: 18)
     
     let maskTexture: SKMutableTexture
     let spriteNode: SKSpriteNode
@@ -40,11 +37,13 @@ class Mask {
         height = size.height
         shiftFromPositionHorizontal = width / (2 * divider)
         shiftFromPositionVertical = height / (2 * divider)
-        self.maskTexture = SKMutableTexture(size: CGSize(width: size.width/divider,
-                                                         height: size.height/divider))
-        self.spriteNode = SKSpriteNode(texture: maskTexture)
-        self.spriteNode.zPosition = 3
-        self.spriteNode.color = SKColor.black
+        brushImageCenter = CGPoint(x: CGFloat(brushImageWidth) / 2,
+                                   y: CGFloat(brushImageHeight) / 2)
+        maskTexture = SKMutableTexture(size: CGSize(width: width/divider,
+                                                    height: height/divider))
+        spriteNode = SKSpriteNode(texture: maskTexture)
+        spriteNode.zPosition = 3
+        spriteNode.color = SKColor.black
     }
     
     func generateBrushImage(rotation: CGFloat, color: CGColor, brush: CGRect) -> [UInt8] {
@@ -70,28 +69,29 @@ class Mask {
     func drawOnTexture(point: CGPoint, brush: [UInt8]) {
         maskTexture.modifyPixelData({pixelData, lengthInBytes in
             let maskTextureWidth = Int(self.maskTexture.size().width)
-            let indexInTextureArray = Int(point.y - self.brushImageCenter.y) * maskTextureWidth + Int(point.x - self.brushImageCenter.x)
+            let indexInTextureArray = Int(point.y - self.brushImageCenter.y) * maskTextureWidth
+                + Int(point.x - self.brushImageCenter.x)
             for brushX in 0..<self.brushImageWidth {
                 for brushY in 0..<self.brushImageHeight {
                     let brushArrayIndex = (brushY * self.brushImageWidth + brushX) * 4
-                    let pixelArray: [UInt8] = [brush[brushArrayIndex + 0],
-                                           brush[brushArrayIndex + 1],
-                                           brush[brushArrayIndex + 2],
-                                           brush[brushArrayIndex + 3]]
+                    let pixelArray: [UInt8] = [brush[brushArrayIndex + 0], //red
+                                           brush[brushArrayIndex + 1], // green
+                                           brush[brushArrayIndex + 2], // blue
+                                           brush[brushArrayIndex + 3]] //alpha
                     var pixel: UInt32 = 0
-                    if (pixelArray[3] == 0xFF) {
-                        if (pixelArray[2] == 0xFF) {
+                    if (pixelArray[3] == 0xFF) { //alpha
+                        if (pixelArray[2] == 0xFF) { //blue
                             pixel = 0xFFFF0000
-                        } else if (pixelArray[0] == 0xFF) {
+                        } else if (pixelArray[0] == 0xFF) { // red
                             pixel = 0xFF0000FF
                         }
                     }
                     if (pixel != 0x00000000) {
                         let byteOffset = indexInTextureArray * 4 + brushX * 4 + brushY * 4 * maskTextureWidth
                         let originalValue = pixelData?.load(fromByteOffset: byteOffset, as: UInt32.self)
-                        if (originalValue! == 0xFF0000FF && pixel == 0xFFFF0000) {
+                        if (originalValue! == 0xFF0000FF && pixel == 0xFFFF0000) { //blue on red
                             pixelData?.storeBytes(of: pixel, toByteOffset: byteOffset, as: UInt32.self)
-                        } else if (originalValue! == 0 && (pixel == 0xFFFF0000 || pixel == 0xFF0000FF)) {
+                        } else if (originalValue! == 0 && pixel == 0xFF0000FF) { // red on nothing
                             pixelData?.storeBytes(of: pixel, toByteOffset: byteOffset, as: UInt32.self)
                         }
                     }
@@ -106,10 +106,14 @@ class Mask {
     }
     
     func update(spriteNode: SKSpriteNode) {
-        let brushImage = generateBrushImage(rotation: spriteNode.zRotation, color: colorRed,
-                                            brush: combineBrush)
+        let headerBrushImage = generateBrushImage(rotation: spriteNode.zRotation, color: colorRed,
+                                            brush: headerBrush)
+        let strawBrushImage = generateBrushImage(rotation: spriteNode.zRotation, color: colorBlue,
+                                            brush: strawBrush)
         drawOnTexture(point: nodePointToTexturePoint(position: spriteNode.position),
-                      brush: brushImage)
+                      brush: headerBrushImage)
+        drawOnTexture(point: nodePointToTexturePoint(position: spriteNode.position),
+                      brush: strawBrushImage)
     }
     
 }

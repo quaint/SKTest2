@@ -71,20 +71,27 @@
 		2235F9C01E264FA30054A364 /* SKTest2 */ = {
 			isa = PBXGroup;
 			children = (
+				228BD461224520E5008B9029 /* Resources */,
 				22A00B9C2243BFA1006B6D6D /* Objects */,
 				2235F9C11E264FA30054A364 /* AppDelegate.swift */,
-				2235F9C51E264FA30054A364 /* Actions.sks */,
-				224770F81E2E51E90024B2E7 /* GameScene.sks */,
 				2235F9C71E264FA30054A364 /* GameScene.swift */,
 				2235F9C91E264FA30054A364 /* ViewController.swift */,
+				224770F61E2CE9700024B2E7 /* Keyboard.swift */,
 				2235F9CB1E264FA30054A364 /* Assets.xcassets */,
 				2235F9CD1E264FA30054A364 /* Main.storyboard */,
 				2235F9D01E264FA30054A364 /* Info.plist */,
-				224770F61E2CE9700024B2E7 /* Keyboard.swift */,
-				224770FA1E30C8E30024B2E7 /* field.fsh */,
-				223CA1DF1E5F8317005C1812 /* CombineNext.swift */,
 			);
 			path = SKTest2;
+			sourceTree = "<group>";
+		};
+		228BD461224520E5008B9029 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				2235F9C51E264FA30054A364 /* Actions.sks */,
+				224770F81E2E51E90024B2E7 /* GameScene.sks */,
+				224770FA1E30C8E30024B2E7 /* field.fsh */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		22A00B9C2243BFA1006B6D6D /* Objects */ = {
@@ -94,6 +101,7 @@
 				22A00B9A2243BF9A006B6D6D /* Field.swift */,
 				226DB6AA224132CB002A3532 /* Combine.swift */,
 				22A00B9D2243CA89006B6D6D /* Tractor.swift */,
+				223CA1DF1E5F8317005C1812 /* CombineNext.swift */,
 			);
 			path = Objects;
 			sourceTree = "<group>";
