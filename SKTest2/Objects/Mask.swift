@@ -25,22 +25,29 @@ class Mask {
     
     let colorRed = CGColor(red: 1.0, green: 0.0, blue: 0.0, alpha: 1.0)
     let colorBlue = CGColor(red: 0.0, green: 0.0, blue: 1.0, alpha: 1.0)
-    let combineMaskRect = CGRect(x: 11, y: -18, width: 4, height: 36)
-    let tractorMaskRect = CGRect(x: -20, y: -9, width: 4, height: 18)
+    let combineBrush = CGRect(x: 11, y: -20, width: 4, height: 38)
+    let tractorBrush = CGRect(x: -20, y: -9, width: 4, height: 18)
     
     let maskTexture: SKMutableTexture
     let spriteNode: SKSpriteNode
+    let width: CGFloat
+    let height: CGFloat
+    let shiftFromPositionHorizontal: CGFloat
+    let shiftFromPositionVertical: CGFloat
     
     init(size: CGSize) {
+        width = size.width
+        height = size.height
+        shiftFromPositionHorizontal = width / (2 * divider)
+        shiftFromPositionVertical = height / (2 * divider)
         self.maskTexture = SKMutableTexture(size: CGSize(width: size.width/divider,
                                                          height: size.height/divider))
         self.spriteNode = SKSpriteNode(texture: maskTexture)
         self.spriteNode.zPosition = 3
         self.spriteNode.color = SKColor.black
-
     }
     
-    func generateBrushImage(rotation: CGFloat, color: CGColor, mask: CGRect) -> [UInt8] {
+    func generateBrushImage(rotation: CGFloat, color: CGColor, brush: CGRect) -> [UInt8] {
         let context = CGContext(data: nil, width: brushImageWidth, height: brushImageHeight,
                                 bitsPerComponent: 8, bytesPerRow: brushImageWidth * 4,
                                 space: colorSpace, bitmapInfo: bitmapInfo.rawValue)
@@ -48,7 +55,7 @@ class Mask {
         context?.translateBy(x: self.brushImageCenter.x, y: self.brushImageCenter.y)
         context?.setFillColor(color)
         context?.rotate(by: -rotation) //why * -1 ?
-        context?.fill(mask)
+        context?.fill(brush)
         
         let image = context?.makeImage()
         let data = image?.dataProvider?.data
@@ -60,17 +67,17 @@ class Mask {
         return arrayOfBytesWithMask
     }
     
-    func drawBrushAtPoint(point: CGPoint, arrayOfBytesWithMask: [UInt8]) {
+    func drawOnTexture(point: CGPoint, brush: [UInt8]) {
         maskTexture.modifyPixelData({pixelData, lengthInBytes in
             let maskTextureWidth = Int(self.maskTexture.size().width)
             let indexInTextureArray = Int(point.y - self.brushImageCenter.y) * maskTextureWidth + Int(point.x - self.brushImageCenter.x)
             for brushX in 0..<self.brushImageWidth {
                 for brushY in 0..<self.brushImageHeight {
                     let brushArrayIndex = (brushY * self.brushImageWidth + brushX) * 4
-                    let pixelArray: [UInt8] = [arrayOfBytesWithMask[brushArrayIndex + 0],
-                                           arrayOfBytesWithMask[brushArrayIndex + 1],
-                                           arrayOfBytesWithMask[brushArrayIndex + 2],
-                                           arrayOfBytesWithMask[brushArrayIndex + 3]]
+                    let pixelArray: [UInt8] = [brush[brushArrayIndex + 0],
+                                           brush[brushArrayIndex + 1],
+                                           brush[brushArrayIndex + 2],
+                                           brush[brushArrayIndex + 3]]
                     var pixel: UInt32 = 0
                     if (pixelArray[3] == 0xFF) {
                         if (pixelArray[2] == 0xFF) {
@@ -93,15 +100,16 @@ class Mask {
         })
     }
 
-    func update(spriteNode: SKSpriteNode, width: Int, height: Int) {
-        let x = spriteNode.position.x / divider
-            + CGFloat(width) / (2 * divider)
-        let y = spriteNode.position.y / divider
-            + CGFloat(height) / (2 * divider)
-        let brushImage = generateBrushImage(rotation: spriteNode.zRotation,
-                                                 color: colorRed,
-                                                 mask: combineMaskRect)
-        drawBrushAtPoint(point: CGPoint(x: x, y: y), arrayOfBytesWithMask: brushImage)
+    func nodePointToTexturePoint(position: CGPoint) -> CGPoint {
+        return CGPoint(x: position.x / divider + shiftFromPositionHorizontal,
+                       y: position.y / divider + shiftFromPositionVertical)
+    }
+    
+    func update(spriteNode: SKSpriteNode) {
+        let brushImage = generateBrushImage(rotation: spriteNode.zRotation, color: colorRed,
+                                            brush: combineBrush)
+        drawOnTexture(point: nodePointToTexturePoint(position: spriteNode.position),
+                      brush: brushImage)
     }
     
 }

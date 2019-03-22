@@ -14,12 +14,8 @@ class Field {
     let blocksInRow = 50
     let blocksInColumn = 40
     let blockSize = 20
-    var width: Int {
-        return self.blocksInRow * blockSize
-    }
-    var height: Int {
-        return self.blocksInColumn * blockSize
-    }
+    let width: Int
+    let height: Int
     
     let spriteNode: SKSpriteNode
     
@@ -37,8 +33,9 @@ class Field {
 
     init(view: SKView) {
         self.view = view
-        self.mask = Mask(size: CGSize(width: CGFloat(blocksInRow * blockSize),
-                                            height: CGFloat(blocksInColumn * blockSize)))
+        self.width = blocksInRow * blockSize
+        self.height = blocksInColumn * blockSize
+        self.mask = Mask(size: CGSize(width: CGFloat(width),height: CGFloat(height)))
         for x in 0..<blocksInRow {
             for y in 0..<blocksInColumn {
                 let fieldPart = SKSpriteNode(imageNamed: "field")
@@ -72,6 +69,6 @@ class Field {
     }
     
     func update(spriteNode: SKSpriteNode) {
-        mask.update(spriteNode: spriteNode, width: width, height: height)
+        mask.update(spriteNode: spriteNode)
     }
 }
