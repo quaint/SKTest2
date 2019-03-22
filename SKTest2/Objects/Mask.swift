@@ -13,9 +13,16 @@ class Mask {
 
     let brushImageWidth = 60
     let brushImageHeight = 60
-    let center = CGPoint(x: 30.0, y: 30.0)
+    var brushImageCenter: CGPoint {
+        return CGPoint(x: CGFloat(self.brushImageWidth) / 2,
+                       y: CGFloat(self.brushImageHeight) / 2)
+    }
+    
+    let divider: CGFloat = 2.0
+
     let colorSpace:CGColorSpace = CGColorSpaceCreateDeviceRGB()
     let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
+    
     let colorRed = CGColor(red: 1.0, green: 0.0, blue: 0.0, alpha: 1.0)
     let colorBlue = CGColor(red: 0.0, green: 0.0, blue: 1.0, alpha: 1.0)
     let combineMaskRect = CGRect(x: 11, y: -18, width: 4, height: 36)
@@ -25,7 +32,8 @@ class Mask {
     let spriteNode: SKSpriteNode
     
     init(size: CGSize) {
-        self.maskTexture = SKMutableTexture(size: size)
+        self.maskTexture = SKMutableTexture(size: CGSize(width: size.width/divider,
+                                                         height: size.height/divider))
         self.spriteNode = SKSpriteNode(texture: maskTexture)
         self.spriteNode.zPosition = 3
         self.spriteNode.color = SKColor.black
@@ -37,7 +45,7 @@ class Mask {
                                 bitsPerComponent: 8, bytesPerRow: brushImageWidth * 4,
                                 space: colorSpace, bitmapInfo: bitmapInfo.rawValue)
         
-        context?.translateBy(x: self.center.x, y: self.center.y)
+        context?.translateBy(x: self.brushImageCenter.x, y: self.brushImageCenter.y)
         context?.setFillColor(color)
         context?.rotate(by: -rotation) //why * -1 ?
         context?.fill(mask)
@@ -55,7 +63,7 @@ class Mask {
     func drawBrushAtPoint(point: CGPoint, arrayOfBytesWithMask: [UInt8]) {
         maskTexture.modifyPixelData({pixelData, lengthInBytes in
             let maskTextureWidth = Int(self.maskTexture.size().width)
-            let indexInTextureArray = Int(point.y) * maskTextureWidth + Int(point.x)
+            let indexInTextureArray = Int(point.y - self.brushImageCenter.y) * maskTextureWidth + Int(point.x - self.brushImageCenter.x)
             for brushX in 0..<self.brushImageWidth {
                 for brushY in 0..<self.brushImageHeight {
                     let brushArrayIndex = (brushY * self.brushImageWidth + brushX) * 4
@@ -85,5 +93,15 @@ class Mask {
         })
     }
 
+    func update(spriteNode: SKSpriteNode, width: Int, height: Int) {
+        let x = spriteNode.position.x / divider
+            + CGFloat(width) / (2 * divider)
+        let y = spriteNode.position.y / divider
+            + CGFloat(height) / (2 * divider)
+        let brushImage = generateBrushImage(rotation: spriteNode.zRotation,
+                                                 color: colorRed,
+                                                 mask: combineMaskRect)
+        drawBrushAtPoint(point: CGPoint(x: x, y: y), arrayOfBytesWithMask: brushImage)
+    }
     
 }
