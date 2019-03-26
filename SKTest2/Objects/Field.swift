@@ -64,7 +64,7 @@ class Field {
         self.spriteNode.shader?.addUniform(fieldDoneTextureUniform)
         self.spriteNode.shader?.addUniform(fieldGroundTextureUniform)
         self.spriteNode.shader?.addUniform(fieldMaskTextureUniform)
-        
+//        self.spriteNode.anchorPoint = CGPoint(x: 0, y: 0)
         self.spriteNode.zPosition = -1
     }
     
