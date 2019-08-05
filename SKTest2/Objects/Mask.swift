@@ -22,7 +22,8 @@ class Mask {
     
     let colorRed = CGColor(red: 1.0, green: 0.0, blue: 0.0, alpha: 1.0)
     let colorBlue = CGColor(red: 0.0, green: 0.0, blue: 1.0, alpha: 1.0)
-    let headerBrush = CGRect(x: 11, y: -20, width: 4, height: 38)
+    
+    let headerBrush = CGRect(x: 12, y: -20, width: 4, height: 39)
     let strawBrush = CGRect(x: -20, y: -9, width: 4, height: 18)
     
     let maskTexture: SKMutableTexture
@@ -66,7 +67,8 @@ class Mask {
         return arrayOfBytesWithMask
     }
     
-    func drawOnTexture(point: CGPoint, brush: [UInt8]) {
+    func drawOnTexture(point: CGPoint, brush: [UInt8]) -> Int {
+        var modifiedPixels = 0
         maskTexture.modifyPixelData({pixelData, lengthInBytes in
             let maskTextureWidth = Int(self.maskTexture.size().width)
             let indexInTextureArray = Int(point.y - self.brushImageCenter.y) * maskTextureWidth
@@ -93,11 +95,13 @@ class Mask {
                             pixelData?.storeBytes(of: pixel, toByteOffset: byteOffset, as: UInt32.self)
                         } else if (originalValue! == 0 && pixel == 0xFF0000FF) { // red on nothing
                             pixelData?.storeBytes(of: pixel, toByteOffset: byteOffset, as: UInt32.self)
+                            modifiedPixels += 1
                         }
                     }
                 }
             }
         })
+        return modifiedPixels
     }
 
     func nodePointToTexturePoint(position: CGPoint) -> CGPoint {
@@ -105,17 +109,21 @@ class Mask {
                        y: position.y / divider + shiftFromPositionVertical)
     }
     
-    func update(spriteNode: SKSpriteNode, moveDirection: MoveDirection) {
+    func update(spriteNode: SKSpriteNode, moveDirection: MoveDirection, processing: Bool) -> Int {
+        var modifiedPixels = 0
         if moveDirection == .forward {
             let headerBrushImage = generateBrushImage(rotation: spriteNode.zRotation, color: colorRed,
                                             brush: headerBrush)
-            drawOnTexture(point: nodePointToTexturePoint(position: spriteNode.position),
+            modifiedPixels = drawOnTexture(point: nodePointToTexturePoint(position: spriteNode.position),
                           brush: headerBrushImage)
         }
-        let strawBrushImage = generateBrushImage(rotation: spriteNode.zRotation, color: colorBlue,
-                                            brush: strawBrush)
-        drawOnTexture(point: nodePointToTexturePoint(position: spriteNode.position),
-                      brush: strawBrushImage)
+        if processing {
+            let strawBrushImage = generateBrushImage(rotation: spriteNode.zRotation, color: colorBlue,
+                                                brush: strawBrush)
+            _ = drawOnTexture(point: nodePointToTexturePoint(position: spriteNode.position),
+                          brush: strawBrushImage)
+        }
+        return modifiedPixels
     }
     
 }

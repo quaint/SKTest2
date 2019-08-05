@@ -17,14 +17,13 @@ class Combine {
     let pouringSpeed = 100
     var grain = 0
     let maxGrain = 3000
-    let maxFuel = 300
+    let maxFuel = 500
     var fuel: Double
-    var workingTime = 0.0
-    let defaultWorkingTime = 1000
-    let workingSpeed = 1000.0
+    var timeToFinishProcessing = 0.0
+    let processingSpeed = 600.0
     
     var isProcessing: Bool {
-        return workingTime > 0
+        return timeToFinishProcessing > 0
     }
 
     let spriteNode: SKSpriteNode
@@ -35,7 +34,7 @@ class Combine {
         
         self.spriteNode = SKSpriteNode(imageNamed:"combine")
         self.spriteNode.zPosition = 2
-        self.spriteNode.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+//        self.spriteNode.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         self.spriteNode.physicsBody = SKPhysicsBody(rectangleOf: self.spriteNode.size)
         self.spriteNode.position = position
         
@@ -44,7 +43,7 @@ class Combine {
         let textures = [SKTexture(imageNamed: "strawAnim1"), SKTexture(imageNamed: "strawAnim2")]
         let animate = SKAction.animate(with: textures, timePerFrame: 0.2)
         let repeatAnimation = SKAction.repeatForever(animate)
-        strawAnim.run(repeatAnimation)
+        strawAnim.run(repeatAnimation, withKey: "anim")
         self.spriteNode.addChild(strawAnim)
     }
 
@@ -63,8 +62,19 @@ class Combine {
             spriteNode.position = CGPoint(x: spriteNode.position.x + cos(spriteNode.zRotation) * move,
                                           y: spriteNode.position.y + sin(spriteNode.zRotation) * move)
             
-            if workingTime > 0 {
-                workingTime -= delta * workingSpeed
+            if isProcessing {
+                timeToFinishProcessing -= delta * processingSpeed
+                if strawAnim.alpha != 1.0 {
+                    strawAnim.run(SKAction.fadeIn(withDuration: 1.0))
+                }
+            } else {
+                if strawAnim.alpha != 0.0 {
+                    strawAnim.run(SKAction.fadeOut(withDuration: 1.0))
+                }
+            }
+        } else {
+            if strawAnim.alpha != 0.0 {
+                strawAnim.run(SKAction.fadeOut(withDuration: 1.0))
             }
         }
     }

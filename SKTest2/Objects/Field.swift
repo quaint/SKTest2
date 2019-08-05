@@ -64,11 +64,13 @@ class Field {
         self.spriteNode.shader?.addUniform(fieldDoneTextureUniform)
         self.spriteNode.shader?.addUniform(fieldGroundTextureUniform)
         self.spriteNode.shader?.addUniform(fieldMaskTextureUniform)
+        
 //        self.spriteNode.anchorPoint = CGPoint(x: 0, y: 0)
         self.spriteNode.zPosition = -1
+        spriteNode.blendMode = .replace
     }
     
-    func update(spriteNode: SKSpriteNode, moveDirection: MoveDirection) {
-        mask.update(spriteNode: spriteNode, moveDirection: moveDirection)
+    func update(spriteNode: SKSpriteNode, moveDirection: MoveDirection, processing: Bool) -> Int {
+        return mask.update(spriteNode: spriteNode, moveDirection: moveDirection, processing: processing)
     }
 }
